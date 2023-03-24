@@ -1,0 +1,17 @@
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+/* стили для заголовка */
+h1 {
+    font-size: 48px;
+    margin-bottom: 0;
+    text-transform: uppercase;
+}
+/* стили для подзаголовка */
+h2 {
+    font-size: 24px;
+    margin-top: 5px;
+}
