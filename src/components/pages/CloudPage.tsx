@@ -3,7 +3,7 @@ import FileManager from '../parts/FileManager/FileManager';
 
 const CloudPage = () => {
     return (
-        <div>
+        <div className='container'>
             <FileManager />
         </div>
     );

@@ -1,11 +1,17 @@
 import React from 'react';
 import IFolder from '../../../../models/FileManager/IFolder';
 
-const Folder = (folder: IFolder) => {
+import './Folder.css';
+
+const Folder : React.FC<IFolderProps> = ({folder, clickHandle}) => {
     const logo = require("../../../../resources/icons/folder_ico.png") as string;
 
+    const folderClickHandle = () => {
+        clickHandle(folder);
+    }
+
     return (
-        <div className='folder'>
+        <div className='folder' onClick={folderClickHandle}>
             <div className="container">
                 <div className="row">
                     <div className="col">
@@ -19,3 +25,8 @@ const Folder = (folder: IFolder) => {
 };
 
 export default Folder;
+
+interface IFolderProps {
+    folder: IFolder;
+    clickHandle: (folder: IFolder) => void;
+}

@@ -1,0 +1,16 @@
+.control-panel{
+    padding: 5px;
+}
+
+
+.btn-icon{
+    border-radius: 8px;
+    background-color: transparent;
+
+    transition: .1s linear;
+}
+
+.btn-icon:hover{
+    background-color: rgba(0, 128, 0, 0.2);
+    box-shadow: 5px 5px 5px gray;
+}

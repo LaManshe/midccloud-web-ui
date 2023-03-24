@@ -1,0 +1,13 @@
+.folder{
+    border-radius: 8px;
+    background-color: transparent;
+
+    transition: .1s linear;
+}
+
+.folder:hover{
+    background-color: rgba(0, 128, 0, 0.2);
+    box-shadow: 5px 5px 5px gray;
+
+    cursor: pointer;
+}
