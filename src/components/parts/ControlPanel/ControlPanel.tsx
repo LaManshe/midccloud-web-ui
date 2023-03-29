@@ -2,12 +2,13 @@ import React, { useContext, useState } from 'react';
 import FileService from '../../../api/FileService';
 import { FileContext } from '../../../context';
 import RouteStorageHelper from '../../../helpers/RouteStorageHelper';
-import CreateFolderModal from '../CreateFolderModal/CreateFolderModal';
+import CreateFolderModal from '../Modals/CreateFolderModal';
 
 import './ControlPanel.css';
 
 const ControlPanel = () => {
     const {currentLevel, setCurrentLevel} = useContext(FileContext);
+    const {setIsNeedToUpdate} = useContext(FileContext);
 
     const [refElement, setReference] = useState<HTMLInputElement | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,8 +24,10 @@ const ControlPanel = () => {
         refElement?.click();
     }
 
-    const handleInputFileOnChange = (event: any) => {
-        FileService.upload(currentLevel, event.target.files);
+    const handleInputFileOnChange = async (event: any) => {
+        await FileService.upload(currentLevel, event.target.files);
+
+        setIsNeedToUpdate(true);
     }
 
     const stepBackHandle = () => {
@@ -50,12 +53,12 @@ const ControlPanel = () => {
         setIsModalOpen(false);
     };
 
-    const handleSubmitModal = (text: string) => {
+    const handleSubmitModal = async (text: string) => {
         setModalText(text);
 
-        var response = FileService.createFolder(currentLevel, text);
+        var response = await FileService.createFolder(currentLevel, text);
 
-        console.log(response);
+        setIsNeedToUpdate(true);
     };
 
     return (

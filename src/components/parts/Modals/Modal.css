@@ -41,6 +41,10 @@
     cursor: pointer;
 }
 
+.index-999{
+    z-index: 999 !important;
+}
+
 .modal__body input[type="text"] {
     width: 100%;
     padding: 10px;

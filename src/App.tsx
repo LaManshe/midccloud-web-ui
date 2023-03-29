@@ -34,7 +34,8 @@ function App() {
     <AuthContext.Provider value={{
       isAuth,
       setIsAuth,
-      isLoading
+      isLoading,
+      setLoading
     }}>
       <BrowserRouter>
         <Header />

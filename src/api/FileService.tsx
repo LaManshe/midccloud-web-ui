@@ -12,7 +12,13 @@ export default class FileService {
 
     static async getFolder(path: string): Promise<ITiles> {
         const response = await api.get('/files/?path=' + path);
+        //console.log(response);
+        return response.data;
+    }
 
+    static async getFolderLimit(path: string, limit: number, page: number): Promise<ITiles> {
+        const response = await api.get(`/files/limited/?path=${path}&limit=${limit}&page=${page}`);
+        //console.log(response);
         return response.data;
     }
 
@@ -25,7 +31,17 @@ export default class FileService {
 
         filesData.append('Folder', path);
 
-        const response = await api.post('files/upload', filesData);
+        const response = await api.post('files/upload', filesData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },
+            onUploadProgress: progressEvent => {
+              const percentCompleted = progressEvent.total
+                ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                : 0;
+              console.log(percentCompleted);
+            }
+        });
 
         return response;
     }
@@ -40,5 +56,23 @@ export default class FileService {
         const response = await api.post('files/create-folder', folderPath);
 
         return response;
+    }
+
+    static async removeFolder(folderPath: string): Promise<AxiosResponse> {
+        const response = await api.post(`files/delete-folder/?folderPath=${folderPath}`);
+
+        return response;
+    }
+
+    static async getFile(fileName: string, path: string): Promise<IFile> {
+        const response = await api.get(`/files/file/?fileName=${fileName}&path=${path}`);
+
+        return response.data;
+    }
+
+    static async removeFile(folderPath: string, fileName: string): Promise<AxiosResponse> {
+        const response = await api.post(`/files/delete-file/?path=${folderPath}&fileName=${fileName}`);
+
+        return response.data;
     }
 }
