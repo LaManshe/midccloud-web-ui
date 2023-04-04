@@ -58,8 +58,10 @@ export default class FileService {
         return response;
     }
 
-    static async removeFolder(folderPath: string): Promise<AxiosResponse> {
-        const response = await api.post(`files/delete-folder/?folderPath=${folderPath}`);
+    static async removeFolders(foldersPath: string[]): Promise<AxiosResponse> {
+        const response = await api.post(`files/delete-folders`, {
+            Folders: foldersPath
+        });
 
         return response;
     }
@@ -70,8 +72,10 @@ export default class FileService {
         return response.data;
     }
 
-    static async removeFile(folderPath: string, fileName: string): Promise<AxiosResponse> {
-        const response = await api.post(`/files/delete-file/?path=${folderPath}&fileName=${fileName}`);
+    static async removeFiles(filesPath: string[]): Promise<AxiosResponse> {
+        const response = await api.post(`/files/delete-files/`, {
+            Files: filesPath
+        });
 
         return response.data;
     }

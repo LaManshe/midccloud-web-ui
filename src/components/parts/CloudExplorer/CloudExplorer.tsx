@@ -6,11 +6,14 @@ import IFolder from '../../../models/FileManager/IFolder';
 import ITiles from '../../../models/FileManager/ITiles';
 import File from '../Tiles/File/File';
 import Folder from '../Tiles/Folder/Folder';
+import { ICheckedItem } from '../../../interfaces/ICheckedItem';
 
 const CloudExplorer = () => {
     const {currentLevel, setCurrentLevel} = useContext(FileContext);
     const {folders, files} = useContext<ITiles>(FileContext);
     const {setFolders, setFiles} = useContext(FileContext);
+    const {setCheckedItems} = useContext(FileContext);
+
     const [page, setPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [isCanLoadMore, setIsCanLoad] = useState(true);
@@ -32,10 +35,13 @@ const CloudExplorer = () => {
         
         setIsLoading(true);
 
-        if(observer.current) observer.current.disconnect();
+        if(observer.current) {
+            observer.current.disconnect();
+        }
 
         var cb = function(entries: any, observer: IntersectionObserver) {
             if (entries[0].isIntersecting && isCanLoadMore) {
+                console.log('up +1 page');
                 setPage(page + 1);
             }
         };
@@ -72,10 +78,39 @@ const CloudExplorer = () => {
         setIsLoading(false);
     }
 
+    const setEveryCheck = () => {
+        var checked: ICheckedItem[] = [];
+        files.forEach((file) => {
+            const checkedFile : ICheckedItem = {
+                type: 'File',
+                path: file.name
+            }
+            checked.concat(checkedFile);
+        })
+
+        setCheckedItems(checked);
+    }
+
     return (
         <div className='list'>
-            {folders?.map((folder) => <Folder folder={folder} clickHandle={onFolderClick}/>)}
-            {files?.map((file) => <File {...file=file}/>)}
+            <div className="simple-checkbox">
+                <div className="container">
+                    <div className="row">
+                        <div className="col">
+                            <div className="row">
+                                <div className="col-auto">
+                                    <input type='checkbox' onChange={setEveryCheck}/>
+                                </div>
+                                <div className="col">
+                                    <p>Point all</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {folders?.map((folder) => <Folder folder={folder} clickHandle={onFolderClick} key={folder.name}/>)}
+            {files?.map((file) => <File {...file=file} key={file.name}/>)}
             <div ref={trigger} style={{height: 0, background: 'red'}}/>
             {isLoading && isCanLoadMore &&
             <>

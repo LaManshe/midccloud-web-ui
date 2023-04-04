@@ -1,5 +1,7 @@
+import { IExtension } from "./IExtension";
 import ITile from "./ITile";
 
 export default interface IFile extends ITile {
-    extension: any
+    uploadTime: Date;
+    extension: IExtension;
 }

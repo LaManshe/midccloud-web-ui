@@ -3,13 +3,31 @@
     background-color: transparent;
 
     transition: .1s linear;
+
+    cursor: default;
+}
+
+.show{
+    opacity: 1;
+}
+
+.hide{
+    animation: remove-animation 2s ease-out forwards;
+}
+
+@keyframes remove-animation {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
 }
 
 .folder:hover{
     background-color: rgba(0, 128, 0, 0.2);
     box-shadow: 5px 5px 5px gray;
-
-    cursor: pointer;
 }
 
 .btn-icon-remove{
@@ -22,4 +40,26 @@
 .btn-icon-remove:hover{
     background-color: rgba(255, 0, 0, 0.2);
     box-shadow: 5px 5px 5px gray;
+}
+
+input[type="checkbox"] {
+    position: relative;
+    margin: 0;
+    width: 16px;
+    height: 16px;
+    appearance: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    transform: scale(1.5);
+    cursor: pointer;
+}
+
+input[type="checkbox"]:hover {
+    background-color: rgba(0, 128, 0, .2);
+}
+
+input[type="checkbox"]:checked {
+    background-color: rgba(0, 128, 0, .8);
 }

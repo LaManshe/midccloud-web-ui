@@ -2,16 +2,14 @@
     border-radius: 8px;
     background-color: transparent;
 
-    height: 100px !important;
-
     transition: .1s linear;
+
+    cursor: default;
 }
 
 .file:hover{
     background-color: rgba(0, 128, 0, 0.2);
     box-shadow: 5px 5px 5px gray;
-
-    cursor: pointer;
 }
 
 .btn-icon-remove{
@@ -27,8 +25,7 @@
 }
 
 .image{
-    object-fit: cover;
-    width: 60px;
+    max-height: 100px;
 }
 
 strong{
@@ -36,4 +33,26 @@ strong{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+input[type="checkbox"] {
+    position: relative;
+    margin: 0;
+    width: 16px;
+    height: 16px;
+    appearance: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    transform: scale(1.5);
+    cursor: pointer;
+}
+
+input[type="checkbox"]:hover {
+    background-color: rgba(0, 128, 0, .2);
+}
+
+input[type="checkbox"]:checked {
+    background-color: rgba(0, 128, 0, .8);
 }

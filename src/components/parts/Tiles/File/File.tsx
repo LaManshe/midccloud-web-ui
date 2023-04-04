@@ -6,6 +6,7 @@ import ApplyModal from '../../Modals/ApplyModal';
 import FileOpenModal from '../../Modals/FileOpenModal';
 
 import './File.css';
+import { ICheckedItem } from '../../../../interfaces/ICheckedItem';
 
 const File = (file: IFile) => {
     const logo = require("../../../../resources/icons/file_ico.png") as string;
@@ -14,12 +15,16 @@ const File = (file: IFile) => {
     var extension = FileExtensionEnum.Unknown;
 
     const {currentLevel, setIsNeedToUpdate} = useContext(FileContext);
+    const {checkedItems, setCheckedItems} = useContext(FileContext);
 
     const [imageSrc, setImageSrc] = useState<string>('');
     const [isFileOpenModalOpen, setIsFileOpenModalOpen] = useState(false);
     const [modalContent, setModalContent] = useState<JSX.Element>();
     const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
     const [contentApplyModal, setContentApplyModal] = useState<JSX.Element>();
+    const [showFileClass, setShowFileClass] = useState('show');
+
+    const filePath = `${currentLevel}\\${file.name}`;
 
     function dataURItoBlob(dataURI: string): Blob {
         const byteString = atob(dataURI.split(',')[1]);
@@ -31,6 +36,14 @@ const File = (file: IFile) => {
         }
         return new Blob([ab], { type: mimeString });
     }
+
+    useEffect(() => {
+        console.log(`mount ${file.name}`);
+
+        return () => {
+            console.log(`unmount ${file.name}`);
+        }
+    }, [])
 
     useEffect(() => {
         var imageUrl: string = '';
@@ -46,11 +59,18 @@ const File = (file: IFile) => {
         }
 
         return () => {
+            //setShowFileClass('hide');
+            //console.log(file.name);
+            //console.log('unmounted');
             URL.revokeObjectURL(imageUrl);
         }
     }, []);
 
-    const fileClickHandle = async () => {
+    const clickHandle = async (event: any) => {
+        if (event.target.tagName === 'INPUT'){
+            return;
+        }
+
         if (isFileOpenModalOpen) {
             return;
         }
@@ -76,15 +96,13 @@ const File = (file: IFile) => {
         setIsFileOpenModalOpen(true);
     }
 
-    const handleCloseOpenFileModal = () => {
+    const closeModalPhotoShowerHandle = () => {
         //todo revoke image
 
         setIsFileOpenModalOpen(false);
     };
 
-    const handleCloseApplyModal = (event: any) => {
-        event.stopPropagation();
-
+    const handleCloseApplyModal = () => {
         if (isApplyModalOpen === false) {
             return;
         }
@@ -92,61 +110,48 @@ const File = (file: IFile) => {
         setIsApplyModalOpen(false);
     };
 
-    const removeFile = (event:any) => {
-        event.stopPropagation();
+    const removeFileHandler = async () => {
+        setShowFileClass('hide');
 
-        if (isApplyModalOpen){
-            return;
-        }
-
-        const contentForApplyModal = 
-            <div className="row">
-                <div className="col">
-                    <strong>Do you really want to delete file {file.name}?</strong>
-                </div>
-            </div>
-        ;
-
-        setContentApplyModal(contentForApplyModal);
-
-        setIsApplyModalOpen(true);
+        handleCloseApplyModal();
     }
 
-    const removeFileHandler = async (event:any) => {
+    const checkBoxChangeHandle = (event: any) => {
         event.stopPropagation();
 
-        const respoinse = await FileService.removeFile(currentLevel, file.name);
-
-        setIsNeedToUpdate(true);
-
-        handleCloseApplyModal(event);
+        if (event.target.checked){
+            const checkedItem: ICheckedItem = {
+                type: 'File',
+                //hideFunction: removeFileHandler,
+                path: filePath
+            }
+            setCheckedItems(checkedItems.concat(checkedItem));
+        }
+        else {
+            setCheckedItems(checkedItems.filter((checkedItem: ICheckedItem) => checkedItem.path !== filePath));
+        }
     }
 
     return (
-        <div className='file m-2 d-flex align-items-center' onClick={fileClickHandle}>
+        <div className={`file m-2 d-flex align-items-center ${showFileClass}`} onClick={(event) => clickHandle(event)}>
             <div className="container">
                 <div className="row">
                     <div className="col">
-                        <div className="row">
+                        <div className="row d-flex flex-wrap">
+                            <div className="col-auto d-flex align-items-center">
+                                <input type='checkbox' key={file.name} onChange={(event) => checkBoxChangeHandle(event)}/>
+                            </div>
                             <div className="col-auto">
                                 <img className="image" src={imageSrc}/>
                             </div>
-                            <div className="col d-flex align-items-center">
-                                <strong>{file.name}</strong>
+                            <div className="col d-flex align-items-center text-truncate">
+                                {file.name}
                             </div>
                         </div>
                     </div>
-                    <div className="col d-flex align-items-center justify-content-end">
-                        <input className='btn-icon-remove p-1' type="image" src={removeIcon} onClick={(event) => removeFile(event)}/>
-                    </div>
                 </div>
             </div>
-            <FileOpenModal isOpen={isFileOpenModalOpen} onClose={handleCloseOpenFileModal} content={modalContent}/>
-            <ApplyModal 
-                isOpen={isApplyModalOpen} 
-                onClose={(event) => handleCloseApplyModal(event)} 
-                content={contentApplyModal} 
-                onApply={(event) => removeFileHandler(event)} />
+            <FileOpenModal isOpen={isFileOpenModalOpen} onClose={closeModalPhotoShowerHandle} content={modalContent}/>
         </div>
     );
 };
